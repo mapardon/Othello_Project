@@ -5,18 +5,27 @@ import numpy as np
 class OthelloGame:
     """ Implementation of the mechanisms of the game: contains parameter board (representation of the board of the game)
     and implements several operations related to the game (apply move, verify if a move is valid, if the game is
-    finished...). """
+    finished...). When players need to be taken into account, 0 is black player, 1 is white. """
 
     def __init__(self):
         self.board = None
         self.array = None  # store array equivalent to avoid computing it twice if possible
         self.init_board()
 
+    def init_board(self):
+        """ Create 1d list and set center boxes to initial values. 1d lists is motivated by its
+        performances on binary vector conversion and copy operations. """
+
+        self.board = [None] * 64
+        self.board[3 * 8 + 3] = self.board[4 * 8 + 4] = True
+        self.board[3 * 8 + 4] = self.board[4 * 8 + 3] = False
+
     def get_board(self):
         return self.board
 
     def swap_states(self, new_state):
         """ Setter for parameter self.board. """
+
         if len(new_state) == 64:
             self.board = new_state
         else:  # under the form of binary vector, conversion required
@@ -29,15 +38,11 @@ class OthelloGame:
                 else:
                     self.board[i] = None
 
-    def init_board(self):
-        """ Create 1d list and set center boxes to initial values. 1d lists is motivated by its
-        performances on binary vector conversion and copy operations. """
-        self.board = [None] * 64
-        self.board[3 * 8 + 3] = self.board[4 * 8 + 4] = True
-        self.board[3 * 8 + 4] = self.board[4 * 8 + 3] = False
+    # Game related operations #
 
     def is_valid_move(self, player, move):
         """ Checks if placing a piece in given coordinates is a rules-friendly move.
+
         :param player: integer symbol of player attempting the move
         :param move: tuple of non-negatives numbers representing the indices
         :returns game state (type of _board) after playing specified move if it is valid """
@@ -45,10 +50,6 @@ class OthelloGame:
         adjacent = (player + 1) % 2
         leads = list()
         x, y = move  # /!\ x is line index, represents the "height"
-
-        # coordinates are outside the box (player only)
-        if not 0 <= x < 8 or not 0 <= y < 8:
-            return None
 
         # targeted box is already used
         if self.board[x * 8 + y] is not None:
@@ -96,11 +97,14 @@ class OthelloGame:
         return self.play_move(player, move, usable)
 
     def play_move(self, player, move, leads):
-        """ Returns copy of game state if provided move was played. Given move is supposed valid.
+        """ Returns copy of game state if provided move was played (set of afterstates is required for ai agents).
+        Parameter move is supposed valid.
+
         :param move: move to play, tuple of integers
         :param leads: list of directions to update, used to avoid re-verifying "updatable directions" considering
         is_valid_move already executes these verifications
         :param player: color making the move """
+
         after_state = copy.copy(self.board)
         for d in leads:
             dx, dy = move[0] + d[0], move[1] + d[1]
@@ -114,8 +118,10 @@ class OthelloGame:
 
     def playable_moves(self, player):
         """ Test all positions and store playable moves for current player.
+
         :parameter player (0, 1) - indicates whether moves are searched for black or white.
         :returns list of boards representing game if related move is played. """
+
         moves = list()
         for i in range(64):
             new_move = self.is_valid_move(player, divmod(i, 8))
@@ -124,15 +130,19 @@ class OthelloGame:
         return moves
 
     def player_has_move(self, player):
+        """ Check if current player has at least 1 option (otherwise he will not be able to play this turn). """
+
         return len(self.playable_moves(player)) > 0
 
     def all_tiles_used(self):
         """ :returns boolean indicating if all boxes are used (and then game is over).
         NB: complete board is not the only possible endstate but mutual blocking is tested in gameloop. """
+
         return self.board.count(None) == 0
 
-    def victory(self):
+    def white_victory(self):
         """ :returns boolean indicating if white player has won (counts occurrences of True) """
+
         # TODO handle draw
         return self.board.count(True) > (64 - self.board.count(None)) // 2
 
@@ -142,7 +152,6 @@ class OthelloGame:
         :parameter board: if None, checks if self.array is already initialized. Otherwise, convert self.board """
         if board is None:
             if self.array is not None:
-                print("self.array was initialized")
                 return self.array
             source = self.board
         else:

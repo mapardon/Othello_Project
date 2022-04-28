@@ -1,29 +1,33 @@
 from PyQt5.QtWidgets import *
-from gui.MainMenu import MainMenu
+from gui.MenuTab import MenuTab
 from gui.GameTab import GameTab
-from game.GameEngine import GameEngine
 
 
-class WindowUI(QMainWindow):
+class ManagerUI(QMainWindow):
+    """ Run some initializations for UI """
+
     def __init__(self):
         # window pars
-        super(WindowUI, self).__init__()
+        super(ManagerUI, self).__init__()
         self.setMinimumSize(900, 700)
-        self.setWindowTitle("Almanach")
+        self.setWindowTitle("Othello")
+
+        self.move(700, 125)
 
         # central widget
         self.centralWidget = QWidget(self)
         self.setCentralWidget(self.centralWidget)
 
-        # game manager
-        self.game_engine = GameEngine(None)
+        # Parameters transmission between tabs
+        self.pawns_style = None
+        self.game_parameters = None
 
         # Stacking
         self.stack1 = QWidget(self.centralWidget)
         self.stack2 = QWidget(self.centralWidget)
 
         self.Stack = QStackedWidget(self)
-        MainMenu(self.centralWidget, self.Stack, self.stack1, self)
+        MenuTab(self.centralWidget, self.Stack, self.stack1, self)
         GameTab(self.centralWidget, self.Stack, self.stack2, self)
 
         self.Stack.addWidget(self.stack1)

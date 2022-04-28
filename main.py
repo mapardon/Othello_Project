@@ -1,5 +1,5 @@
 import sys
-from gui.WindowUI import WindowUI
+from gui.ManagerUI import ManagerUI
 from PyQt5.QtWidgets import QApplication
 
 
@@ -8,6 +8,6 @@ if __name__ == '__main__':
 
     app.setStyle('Fusion')
 
-    ui = WindowUI()
+    ui = ManagerUI()
     ui.show()
     sys.exit(app.exec_())

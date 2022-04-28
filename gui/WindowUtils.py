@@ -10,7 +10,7 @@ class WindowUtils(QWidget):
         self.wrap = wrap
 
     @staticmethod
-    def exiter():
+    def exit_app():
         QCoreApplication.quit()
 
     @staticmethod
@@ -24,33 +24,26 @@ class WindowUtils(QWidget):
         return cb
 
     @staticmethod
-    def horizontal_menu_widget_layouter(*wids):
+    def horizontal_menu_widget_layout(*widgets):
         layout = QHBoxLayout()
         layout.addStretch()
-        for w in wids:
+        for w in widgets:
             layout.addWidget(w, Qt.AlignLeft)
         layout.addStretch()
         return layout
 
     @staticmethod
     def groupboxer(title, *layouts):
-        groupBox = QGroupBox(title)
-        groupBox.setMinimumWidth(300)
+        group_box = QGroupBox(title)
+        group_box.setMinimumWidth(300)
         layout_for_gb = QVBoxLayout()
+        layout_for_gb.addStretch()
         for l in layouts:
             layout_for_gb.addLayout(l)
-        groupBox.setLayout(layout_for_gb)
+        layout_for_gb.addStretch()
+        group_box.setLayout(layout_for_gb)
 
-        layouted = QHBoxLayout()
-        layouted.addStretch()
-        layouted.addWidget(groupBox, Qt.AlignCenter)
-        layouted.addStretch()
-
-        return layouted
-
-    @staticmethod
-    def itemizator(cbbox):
-        return [cbbox.itemText(i) for i in range(cbbox.count())]
+        return group_box
 
     @staticmethod
     def label_and_input(label_name, centralWidget, lim=False):
@@ -61,17 +54,6 @@ class WindowUtils(QWidget):
         if lim:
             entree.setMaxLength(15)
         return label, entree
-
-    @staticmethod
-    def easter_eggs_manager(code):
-        ret = int()
-        if code == "__S4LTY__":
-            WindowUtils.informative_popup("luvu 愛", "Je t'aime Salty ^.^" + chr(2764))
-        elif code == "__AM3LI__":
-            WindowUtils.informative_popup("Cc Mimi ^.^", "Bon courage piti poulet !! ;*")
-        else:
-            ret = -1
-        return ret
 
     @staticmethod
     def informative_popup(title, msg, btnname=str()):
@@ -103,7 +85,3 @@ class WindowUtils(QWidget):
             return True
         else:
             return False
-
-    @staticmethod
-    def output_str_format(w, t):
-        return w[0].upper() + w[1:], t[0].upper() + t[1:]
