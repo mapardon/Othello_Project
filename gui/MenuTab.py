@@ -40,13 +40,13 @@ class MenuTab(WindowUtils):
         train_file_lt = self.horizontal_menu_widget_layout(train_file_lb, self.train_file_cb)
         # }}
 
-        # learning strategy {{
-        learn_strat_lb = QLabel("Learning strategy", centralWidget)
-        learn_strat_lb.setMinimumWidth(100)
+        # move selection {{
+        move_selec_lb = QLabel("Move selection", centralWidget)
+        move_selec_lb.setMinimumWidth(100)
 
-        self.learn_strat_cb = self.init_combobox(["Q-learning"], centralWidget)
+        self.move_selec_cb = self.init_combobox(["eps-greedy", "softmax exponential"], centralWidget)
 
-        learn_strat_lt = self.horizontal_menu_widget_layout(learn_strat_lb, self.learn_strat_cb)
+        self.move_selec_lt = self.horizontal_menu_widget_layout(move_selec_lb, self.move_selec_cb)
         # }}
 
         # learning rate {{
@@ -72,20 +72,6 @@ class MenuTab(WindowUtils):
 
         train_eps_lt = self.horizontal_menu_widget_layout(train_eps_lb, self.train_eps_sb)
         # }}
-
-        # decrease random factor {{
-        eps_dec_lb = QLabel("EPS decrease", centralWidget)
-        eps_dec_lb.setMinimumWidth(100)
-
-        self.eps_dec_sb = QDoubleSpinBox(centralWidget)
-        self.eps_dec_sb.setMinimumWidth(125)
-        self.eps_dec_sb.setRange(0, 1)
-        self.eps_dec_sb.setSingleStep(0.05)
-
-        esp_dec_lt = self.horizontal_menu_widget_layout(eps_dec_lb, self.eps_dec_sb)
-        # }}
-
-        # TODO lambda for TD ?
 
         # number of games {{
         nb_trains_lb = QLabel("Number of games", centralWidget)
@@ -258,7 +244,14 @@ class MenuTab(WindowUtils):
         nn_size_lt = self.horizontal_menu_widget_layout(nn_size_lb, self.nn_size_sb)
         # }}
 
-        # TODO several layers?
+        # learning strategy {{
+        learn_strat_lb = QLabel("Learning strategy", centralWidget)
+        learn_strat_lb.setMinimumWidth(100)
+
+        self.learn_strat_cb = self.init_combobox(["Q-learning", "SARSA"], centralWidget)
+
+        learn_strat_lt = self.horizontal_menu_widget_layout(learn_strat_lb, self.learn_strat_cb)
+        # }}
 
         # activation function {{
         act_fun_lb = QLabel("Activation function", centralWidget)
@@ -420,14 +413,15 @@ class MenuTab(WindowUtils):
         self.update_comboboxes()
 
         # Groupboxes
-        train_ml_gb = self.groupboxer("Train ML agent", train_file_lt, learn_strat_lt, learn_rate_lt, train_eps_lt,
-                                      esp_dec_lt, nb_trains_lt, train_prog_lt, launch_train_lt)
+        train_ml_gb = self.groupboxer("Train ML agent", train_file_lt, self.move_selec_lt, learn_rate_lt, train_eps_lt,
+                                      nb_trains_lt, train_prog_lt, launch_train_lt)
 
         match_gb = self.groupboxer("Match", player1_lt, player2_lt, pawns_style_lt, match_eps_lt, ml_subtitle_lt,
                                    match_file1_lt, match_file2_lt, mnx_subtitle_lt, play_ehits1_lt, play_ehits2_lt,
                                    launch_match_lt)
 
-        new_ml_gb = self.groupboxer("New ML agent", new_agent_fname_lt, nn_size_lt, act_fun_lt, create_agent_lt)
+        new_ml_gb = self.groupboxer("New ML agent", new_agent_fname_lt, nn_size_lt, learn_strat_lt, act_fun_lt,
+                                    create_agent_lt)
 
         cmp_gb = self.groupboxer("Compare AIs", agent1_type_lt, agent2_type_lt, nb_comps_lt, cmp_eps_lt,
                                  cmp_ml_agent_subtitle_lt, agent1_file_lt, agent2_file_lt,
@@ -488,9 +482,9 @@ class MenuTab(WindowUtils):
             game_parameters = {"mode": "train",
                                "player1": {"type": "ml agent",
                                            "pars": {"network_name": self.train_file_cb.currentText(),
-                                                    "eps": self.train_eps_sb.value(), "ls": self.learn_strat_cb.currentText(),
-                                                    "lr": self.learn_rate_sb.value(), "eps_dec": self.eps_dec_sb.value(),
-                                                    "act_f": None}},
+                                                    "eps": self.train_eps_sb.value(), "ls": None,
+                                                    "mv_selec": self.move_selec_cb.currentText().split(" ")[0],
+                                                    "lr": self.learn_rate_sb.value(), "act_f": None}},
                                "player2": None,
                                "nb_games": self.nb_trains_sb.value()}
 
@@ -543,7 +537,7 @@ class MenuTab(WindowUtils):
 
         else:
             w_int, w_out = create_NN(128, self.nn_size_sb.value())
-            save_new_network(network_name, self.act_fun_cb.currentText().lower(), w_int, w_out)
+            save_new_network(network_name, self.learn_strat_cb.currentText(), self.act_fun_cb.currentText().lower(), w_int, w_out)
             self.update_comboboxes()
         self.new_agent_fname.setText(str())
 

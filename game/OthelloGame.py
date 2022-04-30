@@ -143,7 +143,6 @@ class OthelloGame:
     def white_victory(self):
         """ :returns boolean indicating if white player has won (counts occurrences of True) """
 
-        # TODO handle draw
         return self.board.count(True) > (64 - self.board.count(None)) // 2
 
     def to_array(self, board):
