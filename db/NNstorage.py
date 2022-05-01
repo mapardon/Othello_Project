@@ -9,6 +9,8 @@ Schema of stored data:
 
 import shelve
 
+import numpy as np
+
 STORAGE = "./db/stored-networks"
 
 
@@ -35,9 +37,14 @@ def update_network(network_name, w_int, w_out):
         db[network_name]["w_int"], db[network_name]["w_out"] = w_int, w_out
 
 
-def save_new_network(network_name, ls, act_f, w_int, w_out):
-    """ Same as previous but used for newly created network so save activation function and learning startegy as well
+def save_new_network(network_name, ls, act_f, n_input, n_hidden):
+    """ Same as previous but applied to new network so requires activation function and learning strategy and perform
+    initialization of matrices first.
     """
+
+    w_int = np.random.normal(0, 0.0001, (n_hidden, n_input))
+    w_out = np.random.normal(0, 0.0001, (n_hidden, 1))[:, 0]
+    # W2 is considered as a vector and not input_size x 1 matrix to simplify some notations
 
     with shelve.open(STORAGE, writeback=True) as db:
         db[network_name] = dict()

@@ -2,7 +2,6 @@ from PyQt5.QtCore import QThread
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from ai.new_nn_utils import create_NN
 from db.NNstorage import available_networks, save_new_network
 from game.GameEngine import GameEngine
 from gui.WindowUtils import WindowUtils
@@ -536,8 +535,7 @@ class MenuTab(WindowUtils):
             self.informative_popup("Warning", "Filename must not be empty.", "dismiss")
 
         else:
-            w_int, w_out = create_NN(128, self.nn_size_sb.value())
-            save_new_network(network_name, self.learn_strat_cb.currentText(), self.act_fun_cb.currentText().lower(), w_int, w_out)
+            save_new_network(network_name, self.learn_strat_cb.currentText(), self.act_fun_cb.currentText().lower(), 128, self.nn_size_sb.value())
             self.update_comboboxes()
         self.new_agent_fname.setText(str())
 
