@@ -39,7 +39,7 @@ class GameEngine(QObject):
     input_request = pyqtSignal()
     train_progress = pyqtSignal(int)
     compare_progress = pyqtSignal(int)
-    compare_result = pyqtSignal(str)
+    compare_result = pyqtSignal(list)
     finished = pyqtSignal()
 
     def __init__(self, ui_reference, game_parameters):
@@ -123,12 +123,17 @@ class GameEngine(QObject):
             if not (i % int(nb / 100)):
                 self.compare_progress.emit(ceil(100 * i / nb))
 
-            score[self.compare_loop()] += 1
+            self.compare_loop()
+            result = self.game.victory()
+            if result is not None:
+                score[result] += 1
             self.game.init_board()
 
         # outro
         self.compare_progress.emit(100)
-        self.compare_result.emit("Black won {}%".format(round(100 * score[0] / nb, 2)))
+        self.compare_result.emit(["White won {}%".format(round(100 * score[1] / nb, 2)),
+                                  "Black won {}%".format(round(100 * score[0] / nb, 2)),
+                                  "Ties: {}%".format(round(100 * (nb - score[1] - score[0]) / nb, 2))])
 
     # Game loops #
 
@@ -182,7 +187,8 @@ class GameEngine(QObject):
         log = str()
         if prev_no_play:
             log += "Game reached frozen state\n"
-        log += "White white_victory" if self.game.white_victory() else "Black white_victory"
+        result = self.game.victory()
+        log += "Tie" if result is None else "White victory" if result else "Black victory"
         self.match_log.emit(log)
 
     def train_loop(self):
@@ -205,8 +211,7 @@ class GameEngine(QObject):
 
             p = (p + 1) % 2
 
-        victory = self.game.white_victory()
-        self.players[0].end_game(self.game, victory)
+        self.players[0].end_game(self.game, bool(self.game.victory()))
 
     def compare_loop(self):
 
@@ -229,4 +234,4 @@ class GameEngine(QObject):
 
             p = (p + 1) % 2
 
-        return False if no_play else self.game.white_victory()
+        return self.game.victory()

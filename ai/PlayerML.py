@@ -26,7 +26,7 @@ def relu(x):
 
 
 def relu_gradient(x):
-    return (x > 0) * 1
+    return 1 * (x > 0)
 
 
 class PlayerML(Player):
@@ -76,11 +76,11 @@ class PlayerML(Player):
         elif self.ls == "Q-learning" or self.ls == "SARSA":  # Move + update weight matrices
             return self.learning_move(moves, game.to_array(None))
 
-    def end_game(self, board, victory):
+    def end_game(self, board, white_victory):
         """ Same as previous for the end of the game """
 
         if self.ls == "Q-learning" or self.ls == "SARSA":
-            self.end_game_update(board.to_array(None), victory)
+            self.end_game_update(board.to_array(None), white_victory)
 
     # Moves ranking #
 
@@ -93,6 +93,7 @@ class PlayerML(Player):
         best_moves = list()
         best_value = None
         c = 1 if self.role else -1  # game is viewed under 2nd player pov
+
         for m in moves:
             estimation = self.forward_pass(m)
             if best_value is None or c * estimation > c * best_value:  # black move, invert inequality

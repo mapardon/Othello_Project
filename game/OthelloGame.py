@@ -33,7 +33,7 @@ class OthelloGame:
             for i in range(64):
                 if new_state[i] == 1:
                     self.board[i] = 0
-                elif new_state[i+64] == 1:
+                elif new_state[i + 64] == 1:
                     self.board[i] = 1
                 else:
                     self.board[i] = None
@@ -140,10 +140,11 @@ class OthelloGame:
 
         return self.board.count(None) == 0
 
-    def white_victory(self):
-        """ :returns boolean indicating if white player has won (counts occurrences of True) """
+    def victory(self):
+        """ :returns True if white player won, False if black player won and None in case of tie """
 
-        return self.board.count(True) > (64 - self.board.count(None)) // 2
+        return True if self.board.count(True) > (64 - self.board.count(None)) // 2 else \
+            False if self.board.count(False) > (64 - self.board.count(None)) // 2 else None
 
     def to_array(self, board):
         """ Converts attribute or given board in boolean vector state. Destination type is numpy 1d array.

@@ -388,13 +388,28 @@ class MenuTab(WindowUtils):
         # }}
 
         # results {{
-        results_lb = QLabel("Results", centralWidget)
-        results_lb.setMinimumWidth(100)
+        results_w_lb = QLabel("Results:", centralWidget)
+        results_w_lb.setMinimumWidth(100)
 
-        self.results_dsp = QLabel(str(), centralWidget)
-        self.results_dsp.setMinimumWidth(100)
+        self.results_w_dsp = QLabel(str(), centralWidget)
+        self.results_w_dsp.setMinimumWidth(100)
 
-        cmp_results_lt = self.horizontal_menu_widget_layout(results_lb, self.results_dsp)
+        results_b_lb = QLabel(str(), centralWidget)
+        results_b_lb.setMinimumWidth(100)
+
+        self.results_b_dsp = QLabel(str(), centralWidget)
+        self.results_b_dsp.setMinimumWidth(100)
+
+        results_t_lb = QLabel(str(), centralWidget)
+        results_t_lb.setMinimumWidth(100)
+
+        self.results_t_dsp = QLabel(str(), centralWidget)
+        self.results_t_dsp.setMinimumWidth(100)
+
+        cmp_results_lt = QVBoxLayout()
+        cmp_results_lt.addLayout(self.horizontal_menu_widget_layout(results_b_lb, self.results_b_dsp))
+        cmp_results_lt.addLayout(self.horizontal_menu_widget_layout(results_w_lb, self.results_w_dsp))
+        cmp_results_lt.addLayout(self.horizontal_menu_widget_layout(results_t_lb, self.results_t_dsp))
         # }}
 
         # launch comparison button {{
@@ -543,6 +558,13 @@ class MenuTab(WindowUtils):
         self.wrap.game_parameters = self.fetch_parameters("match")
         stack.setCurrentIndex(menu_index)
 
+    def display_results(self, results):
+        """ Display results after comparison session """
+
+        self.results_w_dsp.setText(results[0])
+        self.results_b_dsp.setText(results[1])
+        self.results_t_dsp.setText(results[2])
+
     def launch_train_compare(self, mode):
         """ Launch train or compare loop in QThread. Same function is used for both purposes since GameEngine is passed
         parameter indicating if it's dealing with training or comparison. """
@@ -564,7 +586,7 @@ class MenuTab(WindowUtils):
         # Other signals & slots
         self.worker.train_progress.connect(self.train_prog_pb.setValue)
         self.worker.compare_progress.connect(self.cmp_prog_pb.setValue)
-        self.worker.compare_result.connect(self.results_dsp.setText)
+        self.worker.compare_result.connect(self.display_results)
 
         # Start the thread
         self.thread.start()
