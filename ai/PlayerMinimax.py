@@ -1,6 +1,7 @@
 import random
 
 from game.Player import Player
+from game.Board import Board
 
 infinity = 100000
 
@@ -16,6 +17,7 @@ class PlayerMinimax(Player):
         """ :returns None if no play is available """
 
         if not game.player_has_move(self.role) :
+            print(game.player_has_move(self.role))
             return None
         else:  # TODO minimax
             v, move = self.minimax(game.get_board, self.max_depth, True)
@@ -28,7 +30,8 @@ class PlayerMinimax(Player):
             return v, state
         if player : #max
             max_eval = -infinity
-            moves = self.possible_moves(state)
+            moves = self.possible_moves(state, player)
+            print(moves)
             best_move = None
             for m in moves :
                 v, n_s = self.minimax(m, depth-1, (player+1)%2) #next_state is not use, unless for the last return (root)
@@ -38,7 +41,7 @@ class PlayerMinimax(Player):
             return max_eval, best_move
         else : #min
             min_eval = infinity
-            moves = self.possible_moves(state)
+            moves = self.possible_moves(state, player)
             best_move = None
             for m in moves :
                 v, n_s = self.minimax(m, depth - 1, (player + 1) % 2)
@@ -47,9 +50,8 @@ class PlayerMinimax(Player):
                     best_move = m
             return min_eval, best_move
 
-    def possible_moves(self, state): #TODO
-        return [None, None, None, None, None, None, None, None, None, None, None, None, 1, None, None, None, None, None, None, None, 1, 1, None, None, None, None, None, 1, 1, 0, 0, 0, None, None, None, 1, 1, None, None, 1, None, None, 0, 0, 0, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None, None, None, None, None, None, 1, None, None, None, None, None, None, 1, 1, None, None, None, None, None, 1, 1, 0, 0, 0, None, None, None, 1, 1, None, None, 1, None, None, 0, 0, 0, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, 1, 1, 1, None, None, None, None, None, 1, 1, 0, 0, 0, None, None, None, 1, 1, None, None, 1, None, None, 0, 0, 0, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, 0, 1, 1, None, None, None, None, 1, 1, 1, 0, 0, None, None, None, 1, 1, None, None, 1, None, None, 0, 0, 0, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, 0, 1, None, 1, None, None, None, 1, 1, 0, 0, 1, None, None, None, 1, 1, None, None, 1, None, None, 0, 0, 0, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, 0, 1, None, None, None, None, None, 1, 1, 1, 0, 0, None, None, None, 1, 1, 1, None, 1, None, None, 0, 0, 0, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, 0, 1, None, None, None, None, None, 1, 1, 0, 0, 0, None, None, None, 1, 1, None, None, 1, None, None, 1, 0, 0, None, None, None, None, 1, None, None, None, None, None, None, None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, 0, 1, None, None, None, None, None, 1, 1, 0, 0, 0, None, None, None, 1, 1, None, None, 1, None, None, 0, 1, 0, None, None, None, None, None, 1, None, None, None, None, None, None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, 0, 1, None, None, None, None, None, 1, 1, 0, 0, 0, None, None, None, 1, 1, None, None, 1, None, None, 0, 1, 0, None, None, None, None, None, None, 1, None, None, None, None, None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, 0, 1, None, None, None, None, None, 1, 1, 0, 0, 0, None, None, None, 1, 1, None, None, 1, None, None, 0, 0, 1, None, None, None, None, None, None, None, 1, None, None, None, None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, 0, 1, None, None, None, None, None, 1, 1, 0, 0, 0, None, None, None, 1, 1, None, None, 1, None, None, 0, 0, 1, None, None, None, None, None, None, None, None, 1, None, None, None, None, None, None, None, None, None, None]
-
+    def possible_moves(self, state, player): #TODO
+        return Board(state).playable_moves(player)
 
     def evaluate_state(self, state): #TODO
         return 0

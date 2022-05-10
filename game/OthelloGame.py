@@ -1,6 +1,6 @@
 import copy
 import numpy as np
-
+from game.Board import Board
 
 class OthelloGame:
     """ Implementation of the mechanisms of the game: contains parameter board (representation of the board of the game)
@@ -8,35 +8,35 @@ class OthelloGame:
     finished...). When players need to be taken into account, 0 is black player, 1 is white. """
 
     def __init__(self):
-        self.board = None
+        self.current_board = None
         self.array = None  # store array equivalent to avoid computing it twice if possible
         self.init_board()
 
     def init_board(self):
         """ Create 1d list and set center boxes to initial values. 1d lists is motivated by its
         performances on binary vector conversion and copy operations. """
-
-        self.board = [None] * 64
-        self.board[3 * 8 + 3] = self.board[4 * 8 + 4] = True
-        self.board[3 * 8 + 4] = self.board[4 * 8 + 3] = False
+        board = [None] * 64
+        self.current_board = Board(board)
+        self.current_board[3 * 8 + 3] = self.current_board[4 * 8 + 4] = True
+        self.current_board[3 * 8 + 4] = self.current_board[4 * 8 + 3] = False
 
     def get_board(self):
-        return self.board
+        return self.current_board.get_board()
 
     def swap_states(self, new_state):
         """ Setter for parameter self.board. """
 
         if len(new_state) == 64:
-            self.board = new_state
+            self.current_board = new_state
         else:  # under the form of binary vector, conversion required
             self.array = new_state
             for i in range(64):
                 if new_state[i] == 1:
-                    self.board[i] = 0
+                    self.current_board[i] = 0
                 elif new_state[i + 64] == 1:
-                    self.board[i] = 1
+                    self.current_board[i] = 1
                 else:
-                    self.board[i] = None
+                    self.current_board[i] = None
 
     # Game related operations #
 
@@ -52,29 +52,29 @@ class OthelloGame:
         x, y = move  # /!\ x is line index, represents the "height"
 
         # targeted box is already used
-        if self.board[x * 8 + y] is not None:
+        if self.current_board[x * 8 + y] is not None:
             return None
 
         # look for adjacent pieces around box
         if x > 1:  # upper line
-            self.board[(x - 1) * 8 + y] == adjacent and leads.append((-1, 0))
+            self.current_board[(x - 1) * 8 + y] == adjacent and leads.append((-1, 0))
             if y > 1:
-                self.board[(x - 1) * 8 + y - 1] == adjacent and leads.append((-1, -1))
+                self.current_board[(x - 1) * 8 + y - 1] == adjacent and leads.append((-1, -1))
             if y < 6:
-                self.board[(x - 1) * 8 + y + 1] == adjacent and leads.append((-1, 1))
+                self.current_board[(x - 1) * 8 + y + 1] == adjacent and leads.append((-1, 1))
 
         if y > 1:  # left
-            self.board[x * 8 + y - 1] == adjacent and leads.append((0, -1))
+            self.current_board[x * 8 + y - 1] == adjacent and leads.append((0, -1))
 
         if y < 6:  # right
-            self.board[x * 8 + y + 1] == adjacent and leads.append((0, 1))
+            self.current_board[x * 8 + y + 1] == adjacent and leads.append((0, 1))
 
         if x < 6:  # lower line
-            self.board[(x + 1) * 8 + y] == adjacent and leads.append((1, 0))
+            self.current_board[(x + 1) * 8 + y] == adjacent and leads.append((1, 0))
             if y > 1:
-                self.board[(x + 1) * 8 + y - 1] == adjacent and leads.append((1, -1))
+                self.current_board[(x + 1) * 8 + y - 1] == adjacent and leads.append((1, -1))
             if y < 6:
-                self.board[(x + 1) * 8 + y + 1] == adjacent and leads.append((1, 1))
+                self.current_board[(x + 1) * 8 + y + 1] == adjacent and leads.append((1, 1))
 
         if not leads:
             # at this point, no explorable direction means piece is either isolated or has no opponent adjacent
@@ -85,8 +85,8 @@ class OthelloGame:
         for d in leads:
             dx, dy = move[0] + d[0], move[1] + d[1]
             found = False
-            while not found and 0 <= dx < 8 and 0 <= dy < 8 and self.board[dx * 8 + dy] is not None:
-                found = self.board[dx * 8 + dy] == player
+            while not found and 0 <= dx < 8 and 0 <= dy < 8 and self.current_board[dx * 8 + dy] is not None:
+                found = self.current_board[dx * 8 + dy] == player
                 dx += d[0]
                 dy += d[1]
             found and usable.append(d)
@@ -105,7 +105,7 @@ class OthelloGame:
         is_valid_move already executes these verifications
         :param player: color making the move """
 
-        after_state = copy.copy(self.board)
+        after_state = copy.copy(self.current_board)
         for d in leads:
             dx, dy = move[0] + d[0], move[1] + d[1]
             while after_state[dx * 8 + dy] != player:
@@ -138,13 +138,13 @@ class OthelloGame:
         """ :returns boolean indicating if all boxes are used (and then game is over).
         NB: complete board is not the only possible endstate but mutual blocking is tested in gameloop. """
 
-        return self.board.count(None) == 0
+        return self.current_board.count(None) == 0
 
     def victory(self):
         """ :returns True if white player won, False if black player won and None in case of tie """
 
-        return True if self.board.count(True) > (64 - self.board.count(None)) // 2 else \
-            False if self.board.count(False) > (64 - self.board.count(None)) // 2 else None
+        return True if self.current_board.count(True) > (64 - self.current_board.count(None)) // 2 else \
+            False if self.current_board.count(False) > (64 - self.current_board.count(None)) // 2 else None
 
     def to_array(self, board):
         """ Converts attribute or given board in boolean vector state. Destination type is numpy 1d array.
@@ -153,7 +153,7 @@ class OthelloGame:
         if board is None:
             if self.array is not None:
                 return self.array
-            source = self.board
+            source = self.current_board
         else:
             source = board
 
@@ -166,15 +166,15 @@ class OthelloGame:
 
 
     def get_white_count(self):
-        return self.board.count(1)
+        return self.current_board.count(1)
 
     def get_black_count(self):
-        return self.board.count(0)
+        return self.current_board.count(0)
 
 
     def __repr__(self):
         """ Custom representation for terminal """
-        b = self.board
+        b = self.current_board
         out = "   " + "  ".join([str(i + 1) for i in range(8)]) + '\n'
 
         for i in range(8):
