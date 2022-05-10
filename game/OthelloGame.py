@@ -1,6 +1,6 @@
 import copy
 import numpy as np
-
+#from game.Board import Board
 
 class OthelloGame:
     """ Implementation of the mechanisms of the game: contains parameter board (representation of the board of the game)
@@ -8,15 +8,13 @@ class OthelloGame:
     finished...). When players need to be taken into account, 0 is black player, 1 is white. """
 
     def __init__(self):
-        self.board = None
+        self.board = [None] * 64
         self.array = None  # store array equivalent to avoid computing it twice if possible
-        self.init_board()
+
 
     def init_board(self):
         """ Create 1d list and set center boxes to initial values. 1d lists is motivated by its
         performances on binary vector conversion and copy operations. """
-
-        self.board = [None] * 64
         self.board[3 * 8 + 3] = self.board[4 * 8 + 4] = True
         self.board[3 * 8 + 4] = self.board[4 * 8 + 3] = False
 
