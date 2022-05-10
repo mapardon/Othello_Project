@@ -71,7 +71,7 @@ class GameEngine(QObject):
 
         # initialize board
         self.game = OthelloGame()
-
+        self.game.init_board()
         # initialize players
         self.players.clear()
 

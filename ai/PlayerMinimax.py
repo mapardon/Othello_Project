@@ -1,26 +1,25 @@
 import random
 
 from game.Player import Player
-from game.Board import Board
-
+from game.OthelloGame import OthelloGame
 infinity = 100000
 
 class PlayerMinimax(Player):
     def __init__(self, role, agent_parameters):
         print("PlayerMinimax : ", role, agent_parameters)
         super(PlayerMinimax, self).__init__(role)
-        self.early_hits = agent_parameters["ehits"]
+        self.max_depth = agent_parameters["ehits"] #check that depth > 0
         self.eps = agent_parameters["eps"]
-        self.max_depth = 5
+        #self.max_depth = 1
 
     def make_move(self, game):
         """ :returns None if no play is available """
 
         if not game.player_has_move(self.role) :
-            print(game.player_has_move(self.role))
+            print("minimax no moves", game.player_has_move(self.role))
             return None
         else:  # TODO minimax
-            v, move = self.minimax(game.get_board, self.max_depth, True)
+            v, move = self.minimax(game.get_board(), self.max_depth, True)
             return move
 
 
@@ -31,10 +30,9 @@ class PlayerMinimax(Player):
         if player : #max
             max_eval = -infinity
             moves = self.possible_moves(state, player)
-            print(moves)
             best_move = None
             for m in moves :
-                v, n_s = self.minimax(m, depth-1, (player+1)%2) #next_state is not use, unless for the last return (root)
+                v, n_s = self.minimax(m, depth-1, (player+1)%2) #next_state is not use, unless for the last return (which is really played)
                 if v > max_eval :
                     max_eval = v
                     best_move = m
@@ -50,8 +48,10 @@ class PlayerMinimax(Player):
                     best_move = m
             return min_eval, best_move
 
-    def possible_moves(self, state, player): #TODO
-        return Board(state).playable_moves(player)
+    def possible_moves(self, state, player):
+        board = OthelloGame()
+        board.swap_states(state)
+        return board.playable_moves(player)
 
     def evaluate_state(self, state): #TODO
         return 0
