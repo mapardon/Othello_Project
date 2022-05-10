@@ -170,6 +170,8 @@ class OthelloGame:
         return self.board.count(0)
 
 
+
+
     def __repr__(self):
         """ Custom representation for terminal """
         b = self.board
