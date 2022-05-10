@@ -164,6 +164,14 @@ class OthelloGame:
                 v[64 * p + i] = 1
         return v
 
+
+    def get_white_count(self):
+        return self.board.count(1)
+
+    def get_black_count(self):
+        return self.board.count(0)
+
+
     def __repr__(self):
         """ Custom representation for terminal """
         b = self.board
