@@ -18,43 +18,47 @@ class PlayerMinimax(Player):
         super(PlayerMinimax, self).__init__(role)
         self.max_depth = agent_parameters["ehits"]  # check that depth > 0
         self.eps = agent_parameters["eps"]
-        # self.max_depth = 1
+
 
     def make_move(self, game):
         """ :returns None if no play is available """
 
+        best_move = None
         if not game.player_has_move(self.role):
             print("minimax no moves", game.player_has_move(self.role))
-            return None
-        else:  # TODO minimax
-            v, move = self.minimax(game.get_board(), self.max_depth, True)
-            return move
+        else:
+            max_eval = -infinity
+            for move in game.playable_moves(self.role) :
+                v = self.minimax(move, self.max_depth, self.role, -infinity, infinity)
+                if v > max_eval:
+                    max_eval = v
+                    best_move = move
+        return best_move
 
-    def minimax(self, state, depth, player):  # without prunning
-        if depth == 0 or len(self.possible_moves(state, player)) == 0 :  # or game over TODO
+    def minimax(self, state, depth, player, alpha, beta):
+        if depth == 0 or len(self.possible_moves(state, player)) == 0 :
             state_eval = self.evaluate_state(player, state)  # gives a numeric evaluation of this state
-            return state_eval, state
+            return state_eval
         if player:  # max
             max_eval = -infinity
             moves = self.possible_moves(state, player)
-            best_move = None
             for m in moves:
-                state_eval, n_s = self.minimax(m, depth - 1, (
-                            player + 1) % 2)  # next_state is not used, except for the last return (which is played)
-                if state_eval > max_eval:
-                    max_eval = state_eval
-                    best_move = m
-            return max_eval, best_move
+                state_eval = self.minimax(m, depth - 1, (player + 1) % 2, alpha, beta)  # next_state is not used, except for the last return (which is played)
+                max_eval = max(max_eval, state_eval)
+                alpha = max(alpha, state_eval)
+                if beta <= alpha :
+                    return max_eval
+            return max_eval
         else:  # min
             min_eval = infinity
             moves = self.possible_moves(state, player)
-            best_move = None
             for m in moves:
-                state_eval, n_s = self.minimax(m, depth - 1, (player + 1) % 2)
-                if state_eval < min_eval:
-                    min_eval = state_eval
-                    best_move = m
-            return min_eval, best_move
+                state_eval = self.minimax(m, depth - 1, (player + 1) % 2, alpha, beta)
+                min_eval = min(min_eval, state_eval)
+                beta = min(beta, state_eval)
+                if beta <= alpha :
+                    return min_eval
+            return min_eval
 
     def possible_moves(self, state, player):
         board = OthelloGame()
@@ -62,6 +66,19 @@ class PlayerMinimax(Player):
         return board.playable_moves(player)
 
     def evaluate_state(self, player, state):
+        """Evaluate the state, return a numerical value.
+        The evaluation depends on differents strategies, each is weighted by a parameter.
+        The strategies are the following :
+        eval =      +the player has won - the other player has won
+                    +the number of corner owned by the player - corners owned by other player
+                    -the number of pawns next to a corner + pawns of the other player next to a corner
+                    (this one is not very important, because if, because of a pawn next to a corner, a corner can be taken, it will be weighted at the next state)
+                    - there are a lot of empty squares next the player'pawns + same for the other player
+                    + the number of pawn of the player - the number of pawns of the other player
+                    + the number of possible moves - possible moves of the other player
+        other things that can be added :
+            - number of pawns along the side (except corner and next-to-corner)
+                    """
         eval =     1 * infinity * self.has_won(player, state) \
                 + -1 * infinity * self.has_won((player+1)%2, state) \
                 +  1 * self.W_CORNER * self.count_corner_coin(player, state) \
