@@ -11,7 +11,7 @@
 \usepackage[colorlinks=true,urlcolor=Blue,linkcolor=Blue,citecolor=Blue]{hyperref}
 
 \title{INFO-H410 Project}
-\author{PARDON Mathieu DIAZ Y SUAREZ Esteban WAFFLARD Guillaume}
+\author{PARDON Mathieu, DIAZ Y SUAREZ Esteban, WAFFLARD Guillaume}
 \date{}
 
 % Content of report:
@@ -191,8 +191,40 @@ The epsilon-greedy strategy depends on a parameter $\epsilon \in [0, 1]$. It wil
 The softmax-exponential strategy will always take a move randomly. The possible moves will be attributed a probability given by a softmax-exponential distribution and depending on their winning probability estimation. Let $S$ be the set of states that the agent can reach by mean of its available moves and $s$ one of these states having a probability estimation of $p_{s}$. This state will be attributed the probability: $\ddfrac{e^{p_{s}}}{\sum_{t \in S}{e^{p_{t}}}}$.
 
 \section{Minimax agent}
+The MiniMax algorithm is Depth-First Search recursive algorithm. It can be seen as tree where each node is a state.
+The root node is the current state and the child of a node is a state that can be reached after one move, from the parent state.
+Considering that each player will the move in its higher interest, the algorithm imagine that the player must player its best move, knowing the its opponent will always its worst move.
 
-\section{Benchmark}
+...
+
+At each node is associated a value, which is the estimation of the value of the move
+
+...
+
+the importance of the parameter depth
+
+The complexity of this algorithm is exponential : 0($b^m$) that is the number of possible move for each state to the power of the depth of the tree.
+It is obvious that the more futures moves are considered, the better will be the result, but also the more will be the computational power.
+
+Prunning...
+
+Our Minimax player has good result against human. The comparaison of performance will be described in the Benchmark section\ref{sec:benchmark}.
+Until depth = 3, the player select a move under the second.
+For depth = 4 to 5, it may take a few seconds to choose a move, especially when the number of possible moves is high.
+For depth = 6 and more, it takes at least 5 seconds, which is slow even for a human player.
+
+\subsection{Heursitic}
+The minimax algorithm depends on an heuristic. Indeed, it need to evaluate how much a move is interesting for him %him or it ?
+or not. This evaluation is given by an heuristic, that is based on human strategies.
+The heuristic return a value that depends on all these rules :
+\begin{itemize}
+    \item rule 1
+    \item rule 2
+\end{itemize}
+The weight of each rule is a parameter that can be modified to improve the result. Obviously, the rules "the player win" and "the other player win", are weighted respectively
+to \textit{infinity} and $-$\textit{infinity}.
+
+\section{Benchmark} \label{sec:benchmark}
 
 \section{Conclusion}
 

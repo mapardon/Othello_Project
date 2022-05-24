@@ -10,8 +10,8 @@ class PlayerMinimax(Player):
     def __init__(self, role, agent_parameters):
         # Weight : #TODO in UI : let user choose the weights of the heuristic
         self.W_CORNER = 5
-        self.W_CLOSE_CORNER = 2 # as the next state already evaluate the matter of corner, no need to over evaluate this one ?
-        self.W_NEXT_EMPTY = 2 #modify this value during the game ?
+        self.W_CLOSE_CORNER = 2
+        self.W_NEXT_EMPTY = 2
         self.W_COINS = 1/3
         self.W_MOVES = 1
         print("PlayerMinimax : ", role, agent_parameters)
@@ -91,7 +91,6 @@ class PlayerMinimax(Player):
                 + -1 * self.W_COINS * self.count_coins((player+1)%2, state) \
                 +  1 * self.W_MOVES * self.count_possible_moves(player, state) \
                 + -1 * self.W_MOVES * self.count_possible_moves((player+1%2), state)
-        print(eval)
         return eval
 
     def count_possible_moves(self, player, state):
