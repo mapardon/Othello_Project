@@ -103,13 +103,13 @@ class MenuTab(WindowUtils):
 
         launch_train_lt = self.horizontal_menu_widget_layout(self.launch_train_btn)
         # }}
-
         # end Train ML agent #
+
 
         # Game against program #
 
         # player 1 type {{
-        player_1_lb = QLabel("PLayer 1", centralWidget)
+        player_1_lb = QLabel("Player 1", centralWidget)
         player_1_lb.setMinimumWidth(100)
 
         self.player1_type_cb = self.init_combobox(["human", "random", "ML agent", "minimax"], centralWidget)
@@ -185,7 +185,7 @@ class MenuTab(WindowUtils):
         # }}
 
         # minimax early hits (player 1) {{
-        play_ehits1_lb = QLabel("Early hits (agent 1)")
+        play_ehits1_lb = QLabel("Steps ahead (agent 1)")
         play_ehits1_lb.setMinimumWidth(100)
 
         self.play_ehits1_sb = QSpinBox(centralWidget)
@@ -198,7 +198,7 @@ class MenuTab(WindowUtils):
         # }}
 
         # minimax early hits (player 2) {{
-        play_ehits2_lb = QLabel("Early hits (agent 2)")
+        play_ehits2_lb = QLabel("Steps ahead (agent 2)")
         play_ehits2_lb.setMinimumWidth(100)
 
         self.play_ehits2_sb = QSpinBox(centralWidget)
@@ -298,7 +298,7 @@ class MenuTab(WindowUtils):
 
         self.nb_comps_sb = QSpinBox(centralWidget)
         self.nb_comps_sb.setMinimumWidth(125)
-        self.nb_comps_sb.setRange(1000, 1000000)
+        self.nb_comps_sb.setRange(100, 1000000)
         self.nb_comps_sb.setSingleStep(1000)
 
         nb_comps_lt = self.horizontal_menu_widget_layout(nb_comps_lb, self.nb_comps_sb)

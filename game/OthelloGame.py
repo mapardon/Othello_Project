@@ -15,6 +15,8 @@ class OthelloGame:
     def init_board(self):
         """ Create 1d list and set center boxes to initial values. 1d lists is motivated by its
         performances on binary vector conversion and copy operations. """
+        self.board = [None] * 64
+        self.array = None
         self.board[3 * 8 + 3] = self.board[4 * 8 + 4] = True
         self.board[3 * 8 + 4] = self.board[4 * 8 + 3] = False
 
