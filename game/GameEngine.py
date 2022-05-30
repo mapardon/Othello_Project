@@ -120,7 +120,7 @@ class GameEngine(QObject):
         nb = self.game_parameters["nb_games"]
 
         for i in range(nb):
-            if not (i % int(nb / 100)):
+            if (nb > 100) and not (i % (nb // 100)):
                 self.compare_progress.emit(ceil(100 * i / nb))
 
             self.compare_loop()

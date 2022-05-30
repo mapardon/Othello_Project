@@ -81,6 +81,19 @@ class PlayerMinimax(Player):
             - number of pawns along the side (except corner and next-to-corner)
                     """
         player = self.role
+        """print(   1 * infinity * self.has_won(player, state) )
+        print(-1 * infinity * self.has_won((player+1)%2, state))
+        print(  1 * self.W_CORNER * self.count_corner_coin(player, state) )
+        print(-1 * self.W_CORNER * self.count_corner_coin((player+1)%2, state))
+        print(  1 * self.W_CLOSE_CORNER * self.count_close_corner_coint(player, state))
+        print(-1 * self.W_CLOSE_CORNER * self.count_close_corner_coint((player+1)%2, state))
+        print(1 * self.W_NEXT_EMPTY * self.count_frontier_discs(player, state))
+        print(-1 * self.W_NEXT_EMPTY * self.count_frontier_discs((player+1)%2, state))
+        print(1 * self.W_COINS * self.count_coins(player, state))
+        print( -1 * self.W_COINS * self.count_coins((player+1)%2, state))
+        print(1 * self.W_MOVES * self.count_possible_moves(player, state))
+        print(-1 * self.W_MOVES * self.count_possible_moves((player+1)%2, state))"""
+
         return     1 * infinity * self.has_won(player, state) \
                 + -1 * infinity * self.has_won((player+1)%2, state) \
                 +  1 * self.W_CORNER * self.count_corner_coin(player, state) \
@@ -103,16 +116,16 @@ class PlayerMinimax(Player):
         return state.count(0)
 
     def count_corner_coin(self, player, state):  # advantage
-        return int(state[0] == player) + int(state[7] == player) + int(state[55] == player) + int(state[63] == player)
+        return int(state[0] == player) + int(state[7] == player) + int(state[56] == player) + int(state[63] == player)
 
     def count_close_corner_coint(self, player, state):  # disavantage
-        #do not take into account if he corner is already taken by one of the 2 player
+        corner = [0, 7, 56, 63]
         close_to_corner = [1, 8, 9, 6, 14, 15, 48, 49, 57, 54, 55, 62]
 
         tot = 0
-        for i in close_to_corner:
-            if state[i] == player: #tot += int(state[i] == player) pour le faire à la Roggeman
-                tot += 1
+        for i in range(len(close_to_corner)):
+            if state[corner[i // 3]] is None: #if corner is not yet taken
+                tot += int(state[close_to_corner[i]] == player)
         return - tot
 
     def count_frontier_discs(self, player, state):  # try to minimize number of discs adjacent to empty square
@@ -123,7 +136,7 @@ class PlayerMinimax(Player):
                 if self.is_adjecent_empty(player, state):
                     tot += 1
 
-        return -tot
+        return tot
 
     def is_adjecent_empty(self, pos, state):
 
