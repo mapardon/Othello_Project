@@ -87,7 +87,7 @@ The first learning strategy used to train the neural network is Q-learning. At e
 	    	\EndFor
 	    	\State $ W_{i}^{(out)} \leftarrow W_{i}^{(out)} - \alpha \cdot \delta \cdot grad^{(out)} \cdot P_{i}^{(int)} $
 	    \EndFor
-	\end{algorithmic} 
+	\end{algorithmic}
 \end{algorithm}
 
 \underline{Notations}: $s'$ is the current state, $grad$ is the derivative of the activation function and $s*$ is the state that the neural network evaluates as most promising for a given player.
@@ -114,16 +114,16 @@ Here are the different activation functions and their derivative considered in t
     \item Sigmoïd
 \end{itemize}
 
-$$ \sigma(x) =  \frac{1}{1 + e^{-x}}  $$ 
-$$ \sigma'(x) =  \sigma(x)(1 - \sigma(x))  $$ 
+$$ \sigma(x) =  \frac{1}{1 + e^{-x}}  $$
+$$ \sigma'(x) =  \sigma(x)(1 - \sigma(x))  $$
 
 \begin{itemize}
     \item ReLU
 \end{itemize}
 
-$$ f(x) =  max(0, x)  $$ 
+$$ f(x) =  max(0, x)  $$
 \[
-    f'(x)= 
+    f'(x)=
 \begin{cases}
     1,         & \text{if } x > 0\\
     0,         & \text{if } x < 0\\
@@ -137,8 +137,8 @@ The value of the derivative is unedefined in $0$ as ReLU is non-differentiable i
     \item Hyperbolic Tangent
 \end{itemize}
 
-$$ tanh(x) =  \frac{e^{x} - e^{-x}}{e^{x} + e^{-x}}  $$ 
-$$ tanh'(x) = \frac{1}{cosh^{2}(x)}  $$ 
+$$ tanh(x) =  \frac{e^{x} - e^{-x}}{e^{x} + e^{-x}}  $$
+$$ tanh'(x) = \frac{1}{cosh^{2}(x)}  $$
 
 \subsection{Move selection rules}
 
@@ -182,8 +182,12 @@ The minimax algorithm depends on an heuristic. Indeed, it need to evaluate how m
 or not. This evaluation is given by an heuristic, that is based on human strategies.
 The heuristic return a value that depends on all these rules :
 \begin{itemize}
-    \item rule 1
-    \item rule 2
+    \item Which player won
+    \item the number of corner owned by each player
+    \item the number of pawns next to a corner
+    \item empty squares next each player'pawns
+    \item the number of pawn of each player
+    \item the number of possible moves
 \end{itemize}
 The weight of each rule is a parameter that can be modified to improve the result. Obviously, the rules "the player win" and "the other player win", are weighted respectively
 to \textit{infinity} and $-$\textit{infinity}.
@@ -191,6 +195,118 @@ to \textit{infinity} and $-$\textit{infinity}.
 
 
 \section{Benchmark} \label{sec:benchmark}
+
+\subsubsection{Test}
+For the machine learning agent, we compared the different learning strategies combined with all the activation functions and different values for the rest of the parameters ( size of neural network, learning rate and random factors). We wanted to find the the optimal combinationof all those parameters to have the most competitive machine learning agent as possible.
+We trained each agent for 7000 games and we compared each other for 200 games.
+Here is a list of the parameters we choose for comparaison:
+\begin{itemize}
+    \item Type of learning : \textit{ Q-learning, SARSA}
+    \item Activation function: \textit{sigmoïd, ReLu, hyperbolic tangent}
+    \item move selection: \textit{eps-greedy, softmax exponential}
+    \item NN size: \textit{20, 40, 60, 80}
+    \item learning rate: \textit{0.1, 0.2, 0.3}
+    \item random factor: \textit{0.2, 0.3, 0.4}
+\end{itemize}
+We decided to compare one parameter at a time. It would have been better to try all combination of those parameters but it would have taken too much computation time. \\
+
+The value below are the percentage of win of the different paramaters in 200 games. \\
+
+\textbf{Learning strategies}
+\\
+\begin{tabular}{|l|c|r|}
+  \hline
+  learning strategy (black) & Q-learning & SARSA \\
+  \hline
+  Q-learning & / & 53 \\
+  SARSA & 44.5 & / \\
+  \hline
+\end{tabular}
+\\
+Q-learning performed a bit better than SARSA in this test. \\
+
+\textbf{Activation function}
+\\
+\begin{tabular}{|l|c|r|t|}
+  \hline
+  activation function (black) & sigmoïd & ReLu & hyperbolic tangent \\
+  \hline
+  sigmoïd & / & 83 & 82 \\
+  ReLu & 11.5 & / & 43.5\\
+  hyperbolic tangent & 29.5 & 67.5 & / \\
+  \hline
+\end{tabular}
+\\
+
+Sigmoïd activation function performed better than the 2 other on this test.
+
+\textbf{move selection}
+\\
+\begin{tabular}{|l|c|r|}
+  \hline
+  move selection (black) & eps-greedy & softmax exponential \\
+  \hline
+  eps-greedy & / & 53 \\
+  softmax exponential & 37.5 & / \\
+  \hline
+\end{tabular}
+
+eps-greedy performed a bit better tha softmax exponential\\
+
+\textbf{NN size}
+
+\begin{tabular}{|l|c|r|t|f|}
+  \hline
+  NN size (black) & 20 & 40 & 60 & 80 \\
+  \hline
+  20 & / & 42 & 49 & 41 \\
+  40 & 47.5 & / & 55 & 53 \\
+  60  & 47 & 37 & / & 43 \\
+  80 & 54.5 & 42.5 & 54 & /\\
+  \hline
+\end{tabular}
+
+There is no obvious winner here, but NN size of 40 and 80 performed better than the other. As the NN size of 40 was better than the of 80 in their confrontetion, we decided to keep the value of 40 for the optimal NN size.
+
+\textbf{learning rate}
+
+
+\begin{tabular}{|l|c|r|t|}
+  \hline
+  learning rate (black) & 0.1 & 0.2 & 0.3 \\
+  \hline
+  0.1 & / & 47.5 & 42 \\
+  0.2 & 56.5 & / & 58.5\\
+  0.3 & 56 & 42 & / \\
+  \hline
+\end{tabular}
+
+The best learning rate here is 0.2
+
+\textbf{Random factor}
+
+\begin{tabular}{|l|c|r|t|}
+  \hline
+  random factor (black) & 0.2 & 0.3 & 0.4 \\
+  \hline
+  0.2 & / & 43.5 & 54 \\
+  0.3 & 52.5 & / & 56.5\\
+  0.4 & 46 & 34.5 & / \\
+  \hline
+\end{tabular}
+
+The best random factor is 0.3
+
+\subsubsection{Result}
+With all those test, we conclude that the best combination of parameters was:
+\begin{itemize}
+    \item Type of learning : \textit{ Q-learning}
+    \item Activation function: \textit{sigmoïd}
+    \item move selection: \textit{eps-greedy}
+    \item NN size: \textit{40}
+    \item learning rate: \textit{0.2}
+    \item random factor: \textit{0.3}
+\end{itemize}
 
 \section{Conclusion}
 
