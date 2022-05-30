@@ -198,7 +198,7 @@ to \textit{infinity} and $-$\textit{infinity}.
 
 \subsubsection{Test}
 For the machine learning agent, we compared the different learning strategies combined with all the activation functions and different values for the rest of the parameters ( size of neural network, learning rate and random factors). We wanted to find the the optimal combinationof all those parameters to have the most competitive machine learning agent as possible.
-We trained each agent for 7000 games and we compared each other for 200 games.
+
 Here is a list of the parameters we choose for comparaison:
 \begin{itemize}
     \item Type of learning : \textit{ Q-learning, SARSA}
@@ -210,10 +210,13 @@ Here is a list of the parameters we choose for comparaison:
 \end{itemize}
 We decided to compare one parameter at a time. It would have been better to try all combination of those parameters but it would have taken too much computation time. \\
 
-The value below are the percentage of win of the different paramaters in 200 games. \\
+We trained each agent for 7000 games and we compared each other for 200 games.
+The value below are the percentage of win of the different paramaters. \\
 
 \textbf{Learning strategies}
-\\
+\newline
+{\footnotesize (activation function: sigmoïd, move selection: eps-greedy, NN size: 40, learning rate: 0.2, random factor: 0.3)}
+\newline
 \begin{tabular}{|l|c|r|}
   \hline
   learning strategy (black) & Q-learning & SARSA \\
@@ -222,11 +225,17 @@ The value below are the percentage of win of the different paramaters in 200 gam
   SARSA & 44.5 & / \\
   \hline
 \end{tabular}
-\\
+\newline
+
 Q-learning performed a bit better than SARSA in this test. \\
 
+\newline
+
 \textbf{Activation function}
-\\
+\newline
+{\footnotesize(learning strategy: Q-learning, move selection: eps-greedy, NN size: 40, learning rate: 0.2, random factor: 0.3)}
+
+\newline
 \begin{tabular}{|l|c|r|t|}
   \hline
   activation function (black) & sigmoïd & ReLu & hyperbolic tangent \\
@@ -236,12 +245,16 @@ Q-learning performed a bit better than SARSA in this test. \\
   hyperbolic tangent & 29.5 & 67.5 & / \\
   \hline
 \end{tabular}
-\\
+\newline
 
 Sigmoïd activation function performed better than the 2 other on this test.
 
+\newline
+
 \textbf{move selection}
-\\
+\newline
+{\footnotesize(learning strategy: Q-learning, activation function: sigmoïd, NN size: 40, learning rate: 0.2, random factor: 0.3)}
+\newline
 \begin{tabular}{|l|c|r|}
   \hline
   move selection (black) & eps-greedy & softmax exponential \\
@@ -250,10 +263,16 @@ Sigmoïd activation function performed better than the 2 other on this test.
   softmax exponential & 37.5 & / \\
   \hline
 \end{tabular}
+\newline
 
 eps-greedy performed a bit better tha softmax exponential\\
 
+\newline
+
 \textbf{NN size}
+\newline
+{\footnotesize(learning strategy: Q-learning, activation function: sigmoïd, move selection: eps-greedy, learning rate: 0.2, random factor: 0.3)}
+\newline
 
 \begin{tabular}{|l|c|r|t|f|}
   \hline
@@ -265,11 +284,17 @@ eps-greedy performed a bit better tha softmax exponential\\
   80 & 54.5 & 42.5 & 54 & /\\
   \hline
 \end{tabular}
+\newline
 
 There is no obvious winner here, but NN size of 40 and 80 performed better than the other. As the NN size of 40 was better than the of 80 in their confrontetion, we decided to keep the value of 40 for the optimal NN size.
 
-\textbf{learning rate}
+\newline
 
+\textbf{learning rate}
+\newline
+
+{\footnotesize(learning strategy: Q-learning, activation function: sigmoïd, move selection: eps-greedy, NN size: 40, random factor: 0.3)}
+\newline
 
 \begin{tabular}{|l|c|r|t|}
   \hline
@@ -280,10 +305,16 @@ There is no obvious winner here, but NN size of 40 and 80 performed better than 
   0.3 & 56 & 42 & / \\
   \hline
 \end{tabular}
+\newline
 
 The best learning rate here is 0.2
+\newline
 
 \textbf{Random factor}
+\newline
+
+{\footnotesize(learning strategy: Q-learning, activation function: sigmoïd, move selection: eps-greedy, NN size: 40, learning rate: 0.2)}
+\newline
 
 \begin{tabular}{|l|c|r|t|}
   \hline
@@ -294,8 +325,11 @@ The best learning rate here is 0.2
   0.4 & 46 & 34.5 & / \\
   \hline
 \end{tabular}
+\newline
 
 The best random factor is 0.3
+
+\newline
 
 \subsubsection{Result}
 With all those test, we conclude that the best combination of parameters was:
