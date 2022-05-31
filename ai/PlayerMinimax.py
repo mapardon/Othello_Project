@@ -9,23 +9,24 @@ infinity = 100000
 class PlayerMinimax(Player):
     def __init__(self, role, agent_parameters):
         # Weight : #TODO in UI : let user choose the weights of the heuristic
-        self.W_CORNER = 100
+        self.W_CORNER = 50
         self.W_CLOSE_CORNER = 2
-        self.W_NEXT_EMPTY = 2
-        self.W_COINS = 1/3
+        self.W_NEXT_EMPTY = 1
+        self.W_EXTERNAL_BORDER = 1
+        self.W_COINS = 1/2
         self.W_MOVES = 1
         super(PlayerMinimax, self).__init__(role)
         self.max_depth = agent_parameters["ehits"]  # check that depth > 0
-        self.eps = agent_parameters["eps"]
+        self.eps = agent_parameters["eps"] #not used
 
 
     def make_move(self, game):
         """ :returns None if no play is available """
 
         best_move = None
-        if not game.player_has_move(self.role):
-            print("minimax no moves", game.player_has_move(self.role))
-        else:
+        #if not game.player_has_move(self.role):
+         #   print("minimax no moves", game.player_has_move(self.role))
+        if game.player_has_move(self.role):
             if self.max_depth == 0 :
                 return random.choice(game.playable_moves(self.role))
             max_eval = -(infinity + 1000)
@@ -38,8 +39,7 @@ class PlayerMinimax(Player):
 
     def minimax(self, state, depth, player, alpha, beta):
         if depth == 0 or len(self.possible_moves(state, player)) == 0 :
-            state_eval = self.evaluate_state(state)  # gives a numeric evaluation of this state
-            return state_eval
+            return self.evaluate_state(state)  # gives a numeric evaluation of this state
         if player:  # max
             max_eval = -(infinity + 1000)
             moves = self.possible_moves(state, player)
@@ -74,32 +74,22 @@ class PlayerMinimax(Player):
                     +the number of corner owned by the player - corners owned by other player
                     -the number of pawns next to a corner + pawns of the other player next to a corner
                     (this one is not very important, because if, because of a pawn next to a corner, a corner can be taken, it will be weighted at the next state)
+                    + the number of pawns on the external border (except. corner & close) - external border for the other player
                     - there are a lot of empty squares next the player'pawns + same for the other player
-                    + the number of pawn of the player - the number of pawns of the other player
+                    + the number of pawns of the player - the number of pawns of the other player
                     + the number of possible moves - possible moves of the other player
         other things that can be added :
             - number of pawns along the side (except corner and next-to-corner)
                     """
         player = self.role
-        """print(   1 * infinity * self.has_won(player, state) )
-        print(-1 * infinity * self.has_won((player+1)%2, state))
-        print(  1 * self.W_CORNER * self.count_corner_coin(player, state) )
-        print(-1 * self.W_CORNER * self.count_corner_coin((player+1)%2, state))
-        print(  1 * self.W_CLOSE_CORNER * self.count_close_corner_coint(player, state))
-        print(-1 * self.W_CLOSE_CORNER * self.count_close_corner_coint((player+1)%2, state))
-        print(1 * self.W_NEXT_EMPTY * self.count_frontier_discs(player, state))
-        print(-1 * self.W_NEXT_EMPTY * self.count_frontier_discs((player+1)%2, state))
-        print(1 * self.W_COINS * self.count_coins(player, state))
-        print( -1 * self.W_COINS * self.count_coins((player+1)%2, state))
-        print(1 * self.W_MOVES * self.count_possible_moves(player, state))
-        print(-1 * self.W_MOVES * self.count_possible_moves((player+1)%2, state))"""
-
         return     1 * infinity * self.has_won(player, state) \
                 + -1 * infinity * self.has_won((player+1)%2, state) \
                 +  1 * self.W_CORNER * self.count_corner_coin(player, state) \
                 + -1 * self.W_CORNER * self.count_corner_coin((player+1)%2, state) \
                 +  1 * self.W_CLOSE_CORNER * self.count_close_corner_coint(player, state) \
                 + -1 * self.W_CLOSE_CORNER * self.count_close_corner_coint((player+1)%2, state) \
+                +  1 * self.W_EXTERNAL_BORDER * self.count_external_border(player, state) \
+                + -1 * self.W_EXTERNAL_BORDER * self.count_external_border((player + 1) % 2, state) \
                 +  1 * self.W_NEXT_EMPTY * self.count_frontier_discs(player, state) \
                 + -1 * self.W_NEXT_EMPTY * self.count_frontier_discs((player+1)%2, state) \
                 +  1 * self.W_COINS * self.count_coins(player, state) \
@@ -151,3 +141,10 @@ class PlayerMinimax(Player):
             if state.count(player) > state.count((player+1)%2) :
                 return True
         return False
+
+    def count_external_border(self, player, state):
+        external_border = [2, 3, 4, 5, 15, 16, 23, 24, 31, 32, 39, 40, 47, 58, 59, 60, 61] #without corner and close_to_corner
+        tot = 0
+        for i in external_border :
+            tot += state[i] == player
+        return tot
