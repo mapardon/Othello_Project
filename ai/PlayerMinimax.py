@@ -79,19 +79,6 @@ class PlayerMinimax(Player):
             - number of pawns along the side (except corner and next-to-corner)
                     """
         player = self.role
-        """print(   1 * infinity * self.has_won(player, state) )
-        print(-1 * infinity * self.has_won((player+1)%2, state))
-        print(  1 * self.W_CORNER * self.count_corner_coin(player, state) )
-        print(-1 * self.W_CORNER * self.count_corner_coin((player+1)%2, state))
-        print(  1 * self.W_CLOSE_CORNER * self.count_close_corner_coint(player, state))
-        print(-1 * self.W_CLOSE_CORNER * self.count_close_corner_coint((player+1)%2, state))
-        print(1 * self.W_NEXT_EMPTY * self.count_frontier_discs(player, state))
-        print(-1 * self.W_NEXT_EMPTY * self.count_frontier_discs((player+1)%2, state))
-        print(1 * self.W_COINS * self.count_coins(player, state))
-        print( -1 * self.W_COINS * self.count_coins((player+1)%2, state))
-        print(1 * self.W_MOVES * self.count_possible_moves(player, state))
-        print(-1 * self.W_MOVES * self.count_possible_moves((player+1)%2, state))"""
-
         return     1 * infinity * self.has_won(player, state) \
                 + -1 * infinity * self.has_won((player+1)%2, state) \
                 +  4 * self.W_CORNER * self.count_corner_coin(player, state) \
