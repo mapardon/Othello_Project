@@ -23,9 +23,7 @@ class PlayerMinimax(Player):
         """ :returns None if no play is available """
 
         best_move = None
-        if not game.player_has_move(self.role):
-            print("minimax no moves", game.player_has_move(self.role))
-        else:
+        if game.player_has_move(self.role):
             if self.max_depth == 0 :
                 return random.choice(game.playable_moves(self.role))
             max_eval = -(infinity + 1000)
@@ -96,16 +94,16 @@ class PlayerMinimax(Player):
 
         return     1 * infinity * self.has_won(player, state) \
                 + -1 * infinity * self.has_won((player+1)%2, state) \
-                +  1 * self.W_CORNER * self.count_corner_coin(player, state) \
-                + -1 * self.W_CORNER * self.count_corner_coin((player+1)%2, state) \
-                +  1 * self.W_CLOSE_CORNER * self.count_close_corner_coint(player, state) \
-                + -1 * self.W_CLOSE_CORNER * self.count_close_corner_coint((player+1)%2, state) \
-                +  1 * self.W_NEXT_EMPTY * self.count_frontier_discs(player, state) \
-                + -1 * self.W_NEXT_EMPTY * self.count_frontier_discs((player+1)%2, state) \
-                +  1 * self.W_COINS * self.count_coins(player, state) \
-                + -1 * self.W_COINS * self.count_coins((player+1)%2, state) \
-                +  1 * self.W_MOVES * self.count_possible_moves(player, state) \
-                + -1 * self.W_MOVES * self.count_possible_moves((player+1)%2, state)
+                +  4 * self.W_CORNER * self.count_corner_coin(player, state) \
+                + -4 * self.W_CORNER * self.count_corner_coin((player+1)%2, state) \
+                +  2 * self.W_CLOSE_CORNER * self.count_close_corner_coint(player, state) \
+                + -2 * self.W_CLOSE_CORNER * self.count_close_corner_coint((player+1)%2, state) \
+                +  0.2 * self.W_NEXT_EMPTY * self.count_frontier_discs(player, state) \
+                + -0.2 * self.W_NEXT_EMPTY * self.count_frontier_discs((player+1)%2, state) \
+                +  0.5 * self.W_COINS * self.count_coins(player, state) \
+                + -0.5 * self.W_COINS * self.count_coins((player+1)%2, state) \
+                +  2 * self.W_MOVES * self.count_possible_moves(player, state) \
+                + -2 * self.W_MOVES * self.count_possible_moves((player+1)%2, state)
 
     def count_possible_moves(self, player, state):
         return len(self.possible_moves(state, player))
