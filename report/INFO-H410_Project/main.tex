@@ -227,9 +227,21 @@ The heuristic return a value that depends on all these rules :
 The weight of each rule is a parameter that can be modified to improve the result. Obviously, the rules "the player win" and "the other player win", are weighted respectively
 to \textit{infinity} and $-$\textit{infinity} (meaning that the agent will always select a move that will make hom move, and always avoid a move that will make him lose).
 In order to improve the agent, we try different weigth. We can also compare two agents with the same algorithm and the same depth, but with different parameters.
- -faire test pour évaluer meilleure heuristique
+
+
 
 -difficulté : easy for the strategy at the beginning, but difficult at the end, beaucause there are many things to thing about
+
+ \newline
+ After several test, we found those optimal weight for each heuristics:
+\begin{itemize}
+    \item Which player won : \textbf{1}
+    \item the number of corner owned by each player : \textbf{1}
+    \item the number of pawns next to a corner : \textbf{10}
+    \item empty squares next each player'pawns : \textbf{2}
+    \item the number of pawn of each player : \textbf{1}
+    \item the number of possible moves : \textbf{3}
+\end{itemize}
 
 
 \section{Benchmark} \label{sec:benchmark}
@@ -379,6 +391,9 @@ With all those test, we conclude that the best combination of parameters was:
     \item learning rate: \textit{0.2}
     \item random factor: \textit{0.3}
 \end{itemize}
+
+\subsubsection{comparison Minimax, ML}
+We trained a ml agent with the parameters found in the previous chapter and trained for 7000 games with minimax with a depth of 3 for 100 games. Minimax won 58\% of the time
 
 \section{Conclusion}
 
