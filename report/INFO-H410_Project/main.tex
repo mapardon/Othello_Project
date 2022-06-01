@@ -267,12 +267,12 @@ The value below are the percentage of win of the different paramaters. \\
 \newline
 {\footnotesize (activation function: sigmoïd, move selection: eps-greedy, NN size: 40, learning rate: 0.2, random factor: 0.3)}
 \newline
-\begin{tabular}{|l|c|r|}
+\begin{tabular}{|l|c|r|t|}
   \hline
-  learning strategy (black) & Q-learning & SARSA \\
+  learning strategy (black) & Q-learning & SARSA & random\\
   \hline
-  Q-learning & / & 53 \\
-  SARSA & 44.5 & / \\
+  Q-learning & / & 53 & 87 \\
+  SARSA & 44.5 & / & 87\\
   \hline
 \end{tabular}
 \newline
@@ -286,13 +286,13 @@ Q-learning performed a bit better than SARSA in this test. \\
 {\footnotesize(learning strategy: Q-learning, move selection: eps-greedy, NN size: 40, learning rate: 0.2, random factor: 0.3)}
 
 \newline
-\begin{tabular}{|l|c|r|t|}
+\begin{tabular}{|l|c|r|t|v|}
   \hline
-  activation function (black) & sigmoïd & ReLu & hyperbolic tangent \\
+  activation function (black) & sigmoïd & ReLu & hyperbolic tangent & random \\
   \hline
-  sigmoïd & / & 83 & 82 \\
-  ReLu & 11.5 & / & 43.5\\
-  hyperbolic tangent & 29.5 & 67.5 & / \\
+  sigmoïd & / & 83 & 82 & 88.5\\
+  ReLu & 11.5 & / & 43.5 & 45.5\\
+  hyperbolic tangent & 29.5 & 67.5 & / & 73\\
   \hline
 \end{tabular}
 \newline
@@ -305,12 +305,12 @@ Sigmoïd activation function performed better than the 2 other on this test.
 \newline
 {\footnotesize(learning strategy: Q-learning, activation function: sigmoïd, NN size: 40, learning rate: 0.2, random factor: 0.3)}
 \newline
-\begin{tabular}{|l|c|r|}
+\begin{tabular}{|l|c|r|t|}
   \hline
-  move selection (black) & eps-greedy & softmax exponential \\
+  move selection (black) & eps-greedy & softmax exponential & random\\
   \hline
-  eps-greedy & / & 53 \\
-  softmax exponential & 37.5 & / \\
+  eps-greedy & / & 53 & 90.5\\
+  softmax exponential & 37.5 & / & 89\\
   \hline
 \end{tabular}
 \newline
@@ -324,14 +324,14 @@ eps-greedy performed a bit better tha softmax exponential\\
 {\footnotesize(learning strategy: Q-learning, activation function: sigmoïd, move selection: eps-greedy, learning rate: 0.2, random factor: 0.3)}
 \newline
 
-\begin{tabular}{|l|c|r|t|f|}
+\begin{tabular}{|l|c|r|t|f|g|}
   \hline
-  NN size (black) & 20 & 40 & 60 & 80 \\
+  NN size (black) & 20 & 40 & 60 & 80 & random\\
   \hline
-  20 & / & 42 & 49 & 41 \\
-  40 & 47.5 & / & 55 & 53 \\
-  60  & 47 & 37 & / & 43 \\
-  80 & 54.5 & 42.5 & 54 & /\\
+  20 & / & 42 & 49 & 41 & 90.5\\
+  40 & 47.5 & / & 55 & 53 & 90.5 \\
+  60  & 47 & 37 & / & 43 & 90\\
+  80 & 54.5 & 42.5 & 54 & / & 88.5\\
   \hline
 \end{tabular}
 \newline
@@ -346,13 +346,13 @@ There is no obvious winner here, but NN size of 40 and 80 performed better than 
 {\footnotesize(learning strategy: Q-learning, activation function: sigmoïd, move selection: eps-greedy, NN size: 40, random factor: 0.3)}
 \newline
 
-\begin{tabular}{|l|c|r|t|}
+\begin{tabular}{|l|c|r|t|g|}
   \hline
-  learning rate (black) & 0.1 & 0.2 & 0.3 \\
+  learning rate (black) & 0.1 & 0.2 & 0.3 & random\\
   \hline
-  0.1 & / & 47.5 & 42 \\
-  0.2 & 56.5 & / & 58.5\\
-  0.3 & 56 & 42 & / \\
+  0.1 & / & 47.5 & 42 & 91.5\\
+  0.2 & 56.5 & / & 58.5 & 92\\
+  0.3 & 56 & 42 & / & 91.5\\
   \hline
 \end{tabular}
 \newline
@@ -361,18 +361,19 @@ The best learning rate here is 0.2
 \newline
 
 \textbf{Random factor}
+This random factor represent the epsilon in e-greddy algorithm
 \newline
 
 {\footnotesize(learning strategy: Q-learning, activation function: sigmoïd, move selection: eps-greedy, NN size: 40, learning rate: 0.2)}
 \newline
 
-\begin{tabular}{|l|c|r|t|}
+\begin{tabular}{|l|c|r|t|g|}
   \hline
-  random factor (black) & 0.2 & 0.3 & 0.4 \\
+  random factor (black) & 0.2 & 0.3 & 0.4 & random\\
   \hline
-  0.2 & / & 43.5 & 54 \\
-  0.3 & 52.5 & / & 56.5\\
-  0.4 & 46 & 34.5 & / \\
+  0.2 & / & 43.5 & 54 & 85.5\\
+  0.3 & 52.5 & / & 56.5 & 85.5\\
+  0.4 & 46 & 34.5 & / & 87\\
   \hline
 \end{tabular}
 \newline
