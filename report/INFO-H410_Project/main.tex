@@ -246,7 +246,7 @@ In order to improve the agent, we try different weigth. We can also compare two 
 
 \section{Benchmark} \label{sec:benchmark}
 
-\subsubsection{Test}
+\subsection{Test}
 For the machine learning agent, we compared the different learning strategies combined with all the activation functions and different values for the rest of the parameters ( size of neural network, learning rate and random factors). We wanted to find the the optimal combinationof all those parameters to have the most competitive machine learning agent as possible.
 
 Here is a list of the parameters we choose for comparaison:
@@ -336,7 +336,7 @@ eps-greedy performed a bit better tha softmax exponential\\
 \end{tabular}
 \newline
 
-There is no obvious winner here, but NN size of 40 and 80 performed better than the other. As the NN size of 40 was better than the of 80 in their confrontetion, we decided to keep the value of 40 for the optimal NN size.
+There is no obvious winner here, but NN size of 40 and 80 performed better than the other. As the NN size of 40 was better than the of 80 in their showdown, we decided to keep the value of 40 for the optimal NN size.
 
 \newline
 
@@ -382,7 +382,7 @@ The best random factor is 0.3
 
 \newline
 
-\subsubsection{Result}
+\subsection{Result}
 With all those test, we conclude that the best combination of parameters was:
 \begin{itemize}
     \item Type of learning : \textit{ Q-learning}
@@ -393,8 +393,8 @@ With all those test, we conclude that the best combination of parameters was:
     \item random factor: \textit{0.3}
 \end{itemize}
 
-\subsubsection{comparison Minimax, ML}
-We trained a ml agent with the parameters found in the previous chapter and trained for 7000 games with minimax with a depth of 3 for 100 games. Minimax won 58\% of the time
+\subsection{comparison Minimax, ML}
+We trained a ml agent with the values of the hyperparameters that showed best results, and trained it for 7000 games. We compared this ml agent with a minimax agent with a depth of 3 for 100 games. Minimax won 58 of those 100 games.
 
 \section{Conclusion}
 
