@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import *
-from gui.MenuTab import MenuTab
-from gui.GameTab import GameTab
+from src.gui.MenuTab import MenuTab
+from src.gui.GameTab import GameTab
 
 
 class ManagerUI(QMainWindow):

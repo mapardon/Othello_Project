@@ -2,10 +2,11 @@ from PyQt5.QtCore import Qt, QThread
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from game.GameEngine import GameEngine, wait_condition
-from gui.ClickableIcon import ClickableIcon
-from gui.WindowUtils import WindowUtils
+from src.game.GameEngine import GameEngine, wait_condition
+from src.gui.ClickableIcon import ClickableIcon
+from src.gui.WindowUtils import WindowUtils
 
+icon_directory = "./src/icons"
 
 class GameTab(WindowUtils):
     """ Defines UI elements for a game between agents or humans """
@@ -51,7 +52,7 @@ class GameTab(WindowUtils):
 
         for x in range(8):
             for y in range(8):
-                tile = GameTab.Tile(8 * x + y, "icons/green.png")
+                tile = GameTab.Tile(8 * x + y, icon_directory+"/green.png")
                 tile.clicked.connect(lambda: self.tile_clicked())
                 tile.setDisabled(True)
                 self.board_lt.addWidget(tile, x, y)
@@ -92,7 +93,7 @@ class GameTab(WindowUtils):
         """ Game is run in a QThread, this functions launches the thread and connects signals """
 
         # choose pawns style
-        self.icon_p1, self.icon_p2 = ("icons/black_dot_green.png", "icons/white_dot_green.png") if self.wrap.pawns_style == "classic" else ("icons/undyne.png", "icons/sans.png")
+        self.icon_p1, self.icon_p2 = (icon_directory+"/black_dot_green.png", icon_directory+"/white_dot_green.png") if self.wrap.pawns_style == "classic" else (icon_directory+"/undyne.png", icon_directory+"/sans.png")
         self.toggle_buttons_activation()
 
         # Initialization of the QThread object
@@ -117,7 +118,7 @@ class GameTab(WindowUtils):
 
     def update_board(self, board):
         for i, v in enumerate(board):
-            self.tiles_list[i].editPixmap("icons/green" if v is None else self.icon_p1 if not v else self.icon_p2)
+            self.tiles_list[i].editPixmap(icon_directory+"/green" if v is None else self.icon_p1 if not v else self.icon_p2)
 
     def toggle_tiles_activation(self):
         """ Player has to make a move
@@ -138,6 +139,6 @@ class GameTab(WindowUtils):
 
     def return_config_menu(self, menu_index):
         for tile in self.tiles_list:
-            tile.editPixmap("icons/green")
+            tile.editPixmap(icon_directory+"/green")
         self.ginfo_dsp.setText("")
         self.baseStack.setCurrentIndex(menu_index)

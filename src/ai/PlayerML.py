@@ -1,6 +1,6 @@
 import random
 import numpy as np
-from game.Player import Player
+from src.game.Player import Player
 
 # Activation functions #
 

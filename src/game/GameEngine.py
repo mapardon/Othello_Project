@@ -4,12 +4,12 @@ from math import ceil
 from PyQt5 import QtCore
 from PyQt5.QtCore import QObject, pyqtSignal
 
-from game.OthelloGame import OthelloGame
-from game.PlayerHuman import PlayerHuman
-from ai.PlayerML import PlayerML
-from ai.PlayerMinimax import PlayerMinimax
-from ai.PlayerRandom import PlayerRandom
-from db.NNstorage import *
+from src.game.OthelloGame import OthelloGame
+from src.game.PlayerHuman import PlayerHuman
+from src.ai.PlayerML import PlayerML
+from src.ai.PlayerMinimax import PlayerMinimax
+from src.ai.PlayerRandom import PlayerRandom
+from src.db.NNstorage import *
 
 
 """ Communication with UI thread """

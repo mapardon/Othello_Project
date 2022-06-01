@@ -1,7 +1,7 @@
 import random
 
-from game.Player import Player
-from game.OthelloGame import OthelloGame
+from src.game.Player import Player
+from src.game.OthelloGame import OthelloGame
 
 infinity = 100000
 

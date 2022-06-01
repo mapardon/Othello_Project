@@ -1,6 +1,6 @@
 import random
 
-from game.Player import Player
+from src.game.Player import Player
 
 
 class PlayerRandom(Player):

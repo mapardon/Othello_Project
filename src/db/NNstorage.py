@@ -11,7 +11,7 @@ import shelve
 
 import numpy as np
 
-STORAGE = "./db/stored-networks"
+STORAGE = "./src/db/stored-networks"
 
 
 def available_networks():

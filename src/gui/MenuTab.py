@@ -2,9 +2,9 @@ from PyQt5.QtCore import QThread
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from db.NNstorage import available_networks, save_new_network
-from game.GameEngine import GameEngine
-from gui.WindowUtils import WindowUtils
+from src.db.NNstorage import available_networks, save_new_network
+from src.game.GameEngine import GameEngine
+from src.gui.WindowUtils import WindowUtils
 
 
 class MenuTab(WindowUtils):

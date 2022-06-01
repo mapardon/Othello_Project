@@ -1,4 +1,4 @@
-from game.Player import Player
+from src.game.Player import Player
 
 class PlayerHuman(Player):
     def __init__(self, role):

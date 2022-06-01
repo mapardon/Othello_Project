@@ -30,7 +30,11 @@
 
 This report will give a description of the implementation of the artificial intelligence for the turn-based strategy game Othello\copyright. In this game, two players play against each other on an 8×8 square board. The board contains initially 2 pieces of each color (black and white) disposed alternatively in the center of the board. Players take turns placing a piece of their own color on the board (the spaces where pieces can be placed must meet certain constraints) and thus all pieces of the opponent's color that are between two pieces of the player's color are converted into the player's color. The game ends when the board is completely filled with pieces or when neither player has any more moves available. The player with the most pieces of his color on the board wins the game. In order to compare several artificial intelligence methods on this game, we developed a machine learning algorithm and a search algorithm. Machine learning agents have been trained with different hyper-parameters and all types of agents have been tested against each other.
 
-\section{Machine learning agent}
+%%
+%       ML Agent
+%%
+
+\section{Machine learning agent}\label{sec:ml}
 
 \subsection{Structure of the network}
 
@@ -159,19 +163,28 @@ The softmax-exponential strategy will always take a move randomly. The possible 
 %           MINIMAX AGENT
 %%
 
-\section{Minimax agent}
-The MiniMax algorithm is Depth-First Search recursive algorithm. It can be seen as tree where each node is a state.
+\section{Minimax agent} \label{sec:minimax}
+\subsection{The Algorithm}
+The MiniMax is an algorithm that maximize the outcome of the player knowing that its opponent will play in its own interest. The output is a move such that the opponent gets the minimum benefit while the player get the maximum benefit.
+It can be seen as tree where each node is a state.
 The root node is the current state and the child of a node is a state that can be reached after one move, from the parent state.
-Considering that each player will the move in its higher interest, the algorithm imagine that the agent will play its best move, knowing that its opponent will always play its own best move (which is the worst move for the original agent).
+%Considering that each player will the move in its higher interest, the algorithm imagine that the agent will play its best move, knowing that its opponent will always play its own best move (which is the worst move for the original agent).
 %describe here the max and min logic
+%minimizing the loss for a worst case scenario.
 
-At each node is associated a value, which is the estimation of the value of the move. This estimation is necessary for the Minimax algorithm, it will be used by the agent to consider which move it will choose.
+At each leaf is associated a value, which is the estimation of the value of the move. This estimation is based on an heuristic described in section \ref{sec:heuristic}, and is necessary for the algorithm.
+
+The efficiency of the algorithm depends on the \textit{Depth} parameter. This parameter is the depth of the tree, or, from a player perspective, the number of moves simulated in the future. With $Depth = 0$, the agent will play randomly (she doesn't simulate any move).
+With $Depth = 1$, the agent will calculate the estimation for each possible move, but nothing more. With $Depth = 2$, the agent will also take into account the moves played by its opponent, etc.
+
+
+
 
 \begin{algorithm}[H] %%TODO ADD PRUNING !
-	\caption{Minimax algorithm without prunning}
+	\caption{Minimax algorithm with prunning}
     \label{alg:minimax}
 	\begin{algorithmic}[1]
-	      \Function{minimax}{currentState, depth, player}
+	      \Function{minimax}{currentState, depth, player, alpha, beta}
 	      \If{$depth==0$ or gameOver()}
 	            \Return evaluateState(state)
 	       \EndIf
@@ -179,8 +192,10 @@ At each node is associated a value, which is the estimation of the value of the 
     	        \State $maxEval \gets -Infinity$
     	        \State $movesList \gets possibleMoves(sate, player)$
     	        \ForAll{m in movesList}
-    	                \State $stateEval \gets $MINIMAX(m, depth-1, otherPlayer)
+    	                \State $stateEval \gets $MINIMAX(m, depth-1, otherPlayer, alpha, beta)
                         \State $maxEval \gets max(maxEval, stateEval)$
+                        \State $alpha \gets max(alpha, stateEval)$
+                        \If{$beta \leq alpha$} \State \Return maxEval \EndIf
     	       \EndFor
     	       \State \Return maxEval
 
@@ -188,8 +203,10 @@ At each node is associated a value, which is the estimation of the value of the 
 	            \State $minEval \gets Infinity$
     	        \State $movesList \gets possibleMoves(sate, player)$
     	       \ForAll{m in movesList}
-    	       	     \State $stateEval \gets $ MINIMAX(m, depth-1, otherPlayer)
-                     \State $minEval \gets max(minEval, stateEval)$
+    	       	     \State $stateEval \gets $ MINIMAX(m, depth-1, otherPlayer, alpha, beta)
+                     \State $minEval \gets min(minEval, stateEval)$
+                     \State $beta \gets min(beta, stateEval)$
+                     \If{$beta \leq alpha$} \State \Return minEval \EndIf
     	       \EndFor
     	       \State \Return minEval
 	       \EndIf
@@ -198,58 +215,60 @@ At each node is associated a value, which is the estimation of the value of the 
 
 	\end{algorithmic}
 \end{algorithm}
-The efficiency of the algorithm depends on the \textit{Depth} parameter. This parameter is the depth of the tree, or, from a player perspective, the number of moves simulated in the future. With $Depth = 0$, the agent will play randomly (she doesn't simulate any move).
-With $Depth = 1$, the agent will calculate the estimation for each possible move, but nothing more. With $Depth = 2$, the agent will also take into account the moves played by its opponent, etc.
+
 
 The complexity of this algorithm is exponential : $0(b^m)$ where $b$ is the \textit{Depth} and $m$ is the number of possible move in each state.
 It is obvious that the more futures moves are considered, the better will be the result, but also the more will be the computational power.
 
-In order to optimize the algorithm, we implemented the pruning optimization. The idea is the following :
+
+In order to optimize the algorithm, we implemented the pruning optimization. The idea is that states that will never be reached should not be explored, to save resources.
 %--> describe the pruning
+%Our Minimax player has good result against human. The comparison of performance will be described in the Benchmark section \ref{sec:benchmark}.
+%Until depth = 3, the player select a move under the second.
+%For depth = 4 to 5, it may take a few seconds to choose a move, especially when the number of possible moves is high.
+%For depth = 6 and more, it takes at least 5 seconds, which is slow even for a human player.
 
-Our Minimax player has good result against human. The comparison of performance will be described in the Benchmark section\ref{sec:benchmark}.
-Until depth = 3, the player select a move under the second.
-For depth = 4 to 5, it may take a few seconds to choose a move, especially when the number of possible moves is high.
-For depth = 6 and more, it takes at least 5 seconds, which is slow even for a human player.
-
-\subsection{Heursitic}
+\subsection{Heursitic}\label{sec:heuristic}
 As explained above, the algorithm assign a numerical value to a state, the \textit{estimation} or \textit{evaluation}. This evaluation is needed by the agent to estimate how much a move is interesting for him %him or it ?
 or not. This evaluation is given by an heuristic, that is based on human strategies.
 The heuristic return a value that depends on all these rules :
 \begin{itemize}
-    \item Which player won
-    \item the number of corner owned by each player
-    \item the number of pawns next to a corner
-    \item empty squares next each player'pawns
-    \item the number of pawn of each player
-    \item the number of possible moves
+    \item Does a player win ?
+    \item The number of corner owned by each player
+    \item The number of pawns next to a corner that is not yet taken (disadvantageous because it might give the corner to the opponent)
+    \item The number of pawns on the external border (exepted the corner on squares next to them)
+    \item Empty squares next each player's pawns
+    \item The total number of pawn of each player
+    \item The number of possible moves at the next turn
 \end{itemize}
 The weight of each rule is a parameter that can be modified to improve the result. Obviously, the rules "the player win" and "the other player win", are weighted respectively
-to \textit{infinity} and $-$\textit{infinity} (meaning that the agent will always select a move that will make hom move, and always avoid a move that will make him lose).
+to \textit{infinity} and $-$\textit{infinity} (meaning that the agent will always select a move that will make him move, and always avoid a move that will make him lose).
 In order to improve the agent, we try different weigth. We can also compare two agents with the same algorithm and the same depth, but with different parameters.
 
 
 
--difficulté : easy for the strategy at the beginning, but difficult at the end, beaucause there are many things to thing about
+%difficulté : easy for the strategy at the beginning, but difficult at the end, beaucause there are many things to thing about
 
  \newline
  After several test, we found those optimal weight for each heuristics:
 \begin{itemize}
-    \item Which player won : \textbf{1}
-    \item the number of corner owned by each player : \textbf{1}
-    \item the number of pawns next to a corner : \textbf{10}
-    \item empty squares next each player'pawns : \textbf{2}
-    \item the number of pawn of each player : \textbf{1}
-    \item the number of possible moves : \textbf{3}
+    \item Which player won : \textbf{infinity}
+    \item the number of corner owned by each player : \textbf{4}
+    \item the number of pawns next to a corner : \textbf{2}
+    \item The number of pawns on the external border \textbf{1}
+    \item empty squares next each player'pawns : \textbf{0.2}
+    \item the number of pawn of each player : \textbf{0.5}
+    \item the number of possible moves : \textbf{2}
+
 \end{itemize}
 
 
 \section{Benchmark} \label{sec:benchmark}
 
 \subsection{Test}
-For the machine learning agent, we compared the different learning strategies combined with all the activation functions and different values for the rest of the parameters ( size of neural network, learning rate and random factors). We wanted to find the the optimal combinationof all those parameters to have the most competitive machine learning agent as possible.
+For the machine learning agent, we compared the different learning strategies combined with all the activation functions and different values for the rest of the parameters ( size of neural network, learning rate and random factors). We wanted to find the the optimal combination of all those parameters to have the most competitive machine learning agent as possible.
 
-Here is a list of the parameters we choose for comparaison:
+Here is a list of the parameters we choose for comparison:
 \begin{itemize}
     \item Type of learning : \textit{ Q-learning, SARSA}
     \item Activation function: \textit{sigmoïd, ReLu, hyperbolic tangent}
@@ -397,5 +416,6 @@ With all those test, we conclude that the best combination of parameters was:
 We trained a ml agent with the values of the hyperparameters that showed best results, and trained it for 7000 games. We compared this ml agent with a minimax agent with a depth of 3 for 100 games. Minimax won 58 of those 100 games.
 
 \section{Conclusion}
-
+We have implemented the game Othello in a Graphic User Interface, and developed two different Artificial Intelligence. The first one was a Machine Learning agent. The algorithm, the learning strategies, and the activation functions are described in the section \ref{sec:ml}. The second is a MinMax algorithm with an heuristic, and is described in the section \ref{sec:minimax}.
+Finally, our results are detailled in the Benchmark section \ref{sec:benchmark}.
 \end{document}
