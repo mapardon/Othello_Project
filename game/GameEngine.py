@@ -159,7 +159,7 @@ class GameEngine(QObject):
                     while new_move is None:
                         self.input_request.emit()
 
-                        # wait for input...
+                        # wait for input
                         mutex.lock()
                         wait_condition.wait(mutex)
                         mutex.unlock()

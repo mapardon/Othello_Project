@@ -1,6 +1,6 @@
 import copy
 import numpy as np
-#from game.Board import Board
+
 
 class OthelloGame:
     """ Implementation of the mechanisms of the game: contains parameter board (representation of the board of the game)
@@ -49,7 +49,7 @@ class OthelloGame:
 
         adjacent = (player + 1) % 2
         leads = list()
-        x, y = move  # /!\ x is line index, represents the "height"
+        x, y = move  # x is line index, represents the "height"
 
         # targeted box is already used
         if self.board[x * 8 + y] is not None:
@@ -170,9 +170,6 @@ class OthelloGame:
 
     def get_black_count(self):
         return self.board.count(0)
-
-
-
 
     def __repr__(self):
         """ Custom representation for terminal """

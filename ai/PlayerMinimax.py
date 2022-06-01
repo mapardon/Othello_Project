@@ -5,17 +5,15 @@ from game.OthelloGame import OthelloGame
 
 infinity = 100000
 
-
 class PlayerMinimax(Player):
     def __init__(self, role, agent_parameters):
-        # Weight : #TODO in UI : let user choose the weights of the heuristic
         self.W_CORNER = 100
         self.W_CLOSE_CORNER = 2
         self.W_NEXT_EMPTY = 2
         self.W_COINS = 1/3
         self.W_MOVES = 1
         super(PlayerMinimax, self).__init__(role)
-        self.max_depth = agent_parameters["ehits"]  # check that depth > 0
+        self.max_depth = agent_parameters["ehits"]
         self.eps = agent_parameters["eps"]
 
 
@@ -27,7 +25,7 @@ class PlayerMinimax(Player):
             if self.max_depth == 0 :
                 return random.choice(game.playable_moves(self.role))
             max_eval = -(infinity + 1000)
-            for move in game.playable_moves(self.role) :
+            for move in game.playable_moves(self.role):
                 v = self.minimax(move, self.max_depth-1, self.role, -infinity, infinity)
                 if v > max_eval:
                     max_eval = v
@@ -75,8 +73,6 @@ class PlayerMinimax(Player):
                     - there are a lot of empty squares next the player'pawns + same for the other player
                     + the number of pawn of the player - the number of pawns of the other player
                     + the number of possible moves - possible moves of the other player
-        other things that can be added :
-            - number of pawns along the side (except corner and next-to-corner)
                     """
         player = self.role
         return     1 * infinity * self.has_won(player, state) \
@@ -120,7 +116,6 @@ class PlayerMinimax(Player):
             if i == player:
                 if self.is_adjecent_empty(player, state):
                     tot += 1
-
         return tot
 
     def is_adjecent_empty(self, pos, state):
